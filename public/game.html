@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Shape Catcher</title>
+</head>
+
+<body id="htmlGame">
+
+    <canvas id="gameCanvas" width="500" height="500" style="border: 1px solid black;"></canvas>
+
+    <script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        const stage = new createjs.Stage("gameCanvas");
+
+        const player = new createjs.Shape();
+        player.graphics.beginFill("green")
+            .moveTo(0, -20)
+            .lineTo(20, 20)
+            .lineTo(-20, 20)
+            .closePath();
+        player.x = 250;
+        player.y = 450;
+        stage.addChild(player);
+
+        const entities = [];
+        let playerScore = 0;
+        let itemPoints = 1;
+        let isPlaying = false;
+        let isGameOver = false;
+
+        const colors = ["orange", "red", "blue", "purple"];
+        const shapes = ["circle", "square", "teardrop"];
+
+        let targetColor = colors[Math.floor(Math.random() * colors.length)];
+        let targetShape = shapes[Math.floor(Math.random() * shapes.length)];
+
+        let scoreText = new createjs.Text("Score: " + playerScore, "20px Arial", "#000000");
+        scoreText.x = 20;
+        scoreText.y = 20;
+        stage.addChild(scoreText);
+
+        let targetText = new createjs.Text(`Collect: ${targetColor} ${targetShape}`, "24px Arial", "#000000");
+        targetText.x = 250;
+        targetText.y = 20;
+        targetText.textAlign = "center";
+        stage.addChild(targetText);
+
+        let startText = new createjs.Text("Press Any Key To Start", "30px Arial", "#000000");
+        startText.x = 250;
+        startText.y = 250;
+        startText.textAlign = "center";
+        stage.addChild(startText);
+
+        let gameOverText = new createjs.Text("Game Over!\nPress 'R' to Restart", "30px Arial", "red");
+        gameOverText.x = 250;
+        gameOverText.y = 250;
+        gameOverText.textAlign = "center";
+
+        function pickNewTarget() {
+            let oldColor = targetColor;
+            let oldShape = targetShape;
+
+            while (targetColor === oldColor && targetShape === oldShape) {
+                targetColor = colors[Math.floor(Math.random() * colors.length)];
+                targetShape = shapes[Math.floor(Math.random() * shapes.length)];
+            }
+
+            targetText.text = `Collect: ${targetColor} ${targetShape}`;
+        }
+
+        let spawnEntity = () => {
+            const entity = new createjs.Shape();
+
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const shape = shapes[Math.floor(Math.random() * shapes.length)];
+
+            entity.color = color;
+            entity.shape = shape;
+
+            if (shape === "circle") {
+                entity.graphics.beginFill(color).drawCircle(0, 0, 10);
+            } else if (shape === "square") {
+                entity.graphics.beginFill(color).drawRect(-10, -10, 20, 20);
+            } else if (shape === "teardrop") {
+                entity.graphics.beginFill(color)
+                    .moveTo(0, -12)
+                    .bezierCurveTo(12, -2, 12, 12, 0, 12)
+                    .bezierCurveTo(-12, 12, -12, -2, 0, -12)
+                    .closePath();
+            }
+
+            entity.x = Math.random() * 460 + 20;
+            entity.y = 0;
+
+            entities.push(entity);
+            stage.addChild(entity);
+        }
+
+        function resetGame() {
+            isGameOver = false;
+            isPlaying = true;
+            playerScore = 0;
+            scoreText.text = "Score: " + playerScore;
+            player.x = 250;
+
+            entities.forEach(entity => stage.removeChild(entity));
+            entities.length = 0;
+
+            stage.removeChild(gameOverText);
+            pickNewTarget();
+        }
+
+        const keys = {};
+        window.addEventListener("keydown", e => {
+            if (!isPlaying && !isGameOver) {
+                isPlaying = true;
+                stage.removeChild(startText);
+            } else if (isGameOver && e.key.toLowerCase() === 'r') {
+                resetGame();
+            }
+            keys[e.key] = true;
+        });
+        window.addEventListener("keyup", e => keys[e.key] = false);
+
+        function isColliding(a, b) {
+            return (
+                a.x - 20 < b.x + 10 &&
+                a.x + 20 > b.x - 10 &&
+                a.y - 20 < b.y + 10 &&
+                a.y + 20 > b.y - 10
+            );
+        }
+
+        createjs.Ticker.framerate = 60;
+        createjs.Ticker.on("tick", () => {
+
+            if (isPlaying) {
+                if (keys["ArrowLeft"] && player.x > 20) player.x -= 5;
+                if (keys["ArrowRight"] && player.x < 480) player.x += 5;
+
+                if (Math.random() < 0.05) spawnEntity();
+
+                for (let i = entities.length - 1; i >= 0; i--) {
+                    let entity = entities[i];
+
+                    entity.y += 2;
+
+                    if (isColliding(player, entity)) {
+
+                        if (entity.color === targetColor && entity.shape === targetShape) {
+                            playerScore += itemPoints;
+                            scoreText.text = "Score: " + playerScore;
+                            pickNewTarget();
+
+                            stage.removeChild(entity);
+                            entities.splice(i, 1);
+                            continue;
+                        } else {
+                            isPlaying = false;
+                            isGameOver = true;
+                            stage.addChild(gameOverText);
+                            break;
+                        }
+                    }
+
+                    if (entity.y > 520) {
+                        stage.removeChild(entity);
+                        entities.splice(i, 1);
+                    }
+                }
+            }
+
+            stage.update();
+        });
+    </script>
+
+    <a href="index.html" class="custom-back-btn">Back to Search</a>
+
+</body>
+
+</html>

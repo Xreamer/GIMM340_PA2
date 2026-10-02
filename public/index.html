@@ -1,0 +1,401 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Anime Finder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+        </script>
+</head>
+
+<body>
+
+    <nav class="custom-navbar">
+        <div class="nav-brand">
+            <span class="brand-icon">📺</span> AnimeDB ⊹⋛⋋( ՞ਊ ՞)⋌⋚⊹
+        </div>
+        <ul class="nav-links">
+            <li><a class="nav-link pulse-glow-link" href="game.html">Game</a>
+            <li><a href="#animeSearchForm">Search</a></li>
+            <li><a href="#animeINSERTForm">Add New</a></li>
+            <li><a href="#footer">Watch</a></li>
+        </ul>
+    </nav>
+
+    <div class="container mt-4">
+        <h2 class="section-title">Trending Anime</h2>
+
+        <div class="trending-slider">
+            <div class="anime-card snap-card">
+                <img src="https://preview.redd.it/what-is-it-that-makes-one-piece-so-popular-v0-0u2aefrzacmc1.jpeg?auto=webp&s=43de34e87b70807ecd9f720e44ca6993656f7258"
+                    alt="One Piece" class="card-image">
+                <div class="card-content">
+                    <span class="card-badge">Shonen</span>
+                    <h3>One Piece</h3>
+                </div>
+            </div>
+
+            <div class="anime-card snap-card">
+                <img src="https://m.media-amazon.com/images/M/MV5BNjdkOTE4NWItYWUyNS00ZTQ5LWE5ODYtODA1YWUxNThhY2E1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+                    alt="Shangri-La Frontier" class="card-image">
+                <div class="card-content">
+                    <span class="card-badge">Shonen</span>
+                    <h3>Shangri-La Frontier</h3>
+                </div>
+
+            </div>
+            <div class="anime-card snap-card">
+                <img src="https://m.media-amazon.com/images/M/MV5BNmU3ZGFhMmYtNzczYy00NTE0LThkYjgtNWFiYTY2NzRkM2QzXkEyXkFqcGc@._V1_.jpg"
+                    alt="Delicious in Dungeon" class="card-image">
+                <div class="card-content">
+                    <span class="card-badge">Seinen</span>
+                    <h3>Delicious in Dungeon</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1>Find an Anime to start!</h1>
+
+    <form id="animeSearchForm" class="container mt-4">
+        <div class='row mb-3'>
+            <div class='col-md-2'><label>Name of Anime</label></div>
+            <div class='col-md-10'><input id='nameAnime' type='text' /></div>
+        </div>
+
+        <div class='row mb-3'>
+            <div class='col-md-2'><label>Genre</label></div>
+            <div class='col-md-10'><input id='genre' type='text' /></div>
+        </div>
+
+        <div class='row mb-3'>
+            <div class='col-md-2'><label>Exclude Service scene</label></div>
+            <div class='col-md-10'><input id='serviceScene' type='checkbox' /></div>
+        </div>
+
+        <div class='row mb-3'>
+            <div class='col-md-2'><label>Has Dub</label></div>
+            <div class='col-md-10'><input id='dub' type='checkbox' /></div>
+        </div>
+
+        <div class='row mb-3'>
+            <div class='col-md-2'><label>Result Limit</label></div>
+            <div class='col-md-2'>
+                <input id='limit' class="form-control" type='number' min="1" max="100" value="10" />
+            </div>
+        </div>
+
+        <div class='row mb-3'>
+            <div class='col-md-12'>
+                <button id='findAnime' type="submit">Find anime</button>
+            </div>
+        </div>
+
+    </form>
+
+    <div id="results" class="container mt-4"></div>
+
+    <h1>Can't find your favorite Anime, put it in the database!</h1>
+
+    <form id="animeINSERTForm" class="container mt-4">
+    <div class='row mb-3'>
+        <div class='col-md-2'><label>Name of Anime</label></div>
+        <div class='col-md-10'>
+            <input id='nameAnimeINSERT' type='text' class="form-control" />
+            <span id="nameINSERTError" class="error-text text-danger" style="display:none;"></span>
+        </div>
+    </div>
+
+    <div class='row mb-3'>
+        <div class='col-md-2'><label>Main Genre (only one)</label></div>
+        <div class='col-md-10'>
+            <input id='genreINSERT' type='text' class="form-control" />
+            <span id="genreINSERTError" class="error-text text-danger" style="display:none;"></span>
+        </div>
+    </div>
+
+    <div class='row mb-3'>
+        <div class='col-md-2'><label>Has Service scene</label></div>
+        <div class='col-md-10'>
+            <input id='serviceSceneINSERT' type='checkbox' />
+            <span id="serviceSceneINSERTError" class="error-text text-danger d-block" style="display:none;"></span>
+        </div>
+    </div>
+
+    <div class='row mb-3'>
+        <div class='col-md-2'><label>Has Dub</label></div>
+        <div class='col-md-10'>
+            <input id='dubINSERT' type='checkbox' />
+            <span id="dubINSERTError" class="error-text text-danger d-block" style="display:none;"></span>
+        </div>
+    </div>
+
+    <div class='row mb-3'>
+        <div class='col-md-2'><label>Demographic</label></div>
+        <div class='col-md-10'>
+            <select id='demographicINSERT'>
+                <option value="-1">-</option>
+                <option value="1">G - For family or everyone</option>
+                <option value="2">PG - For everyone maybe not for family</option>
+                <option value="3">PG 13 - For adults or teens above 13</option>
+                <option value="4">R - For adults or teens over 17</option>
+                <option value="5">NC 17 - For adults or teens over 17</option>
+                <option value="6">G - For family and everyone(excluding religious)</option>
+                <option value="7">PG - Not for family and religious people</option>
+                <option value="8">PG 13 - For adults and pre teens(excluding religious)</option>
+                <option value="9">PG - For everyone and pre teens</option>
+                <option value="10">PG - For everyone and pre teens (excluding religious)</option>
+            </select>
+            <span id="demographicINSERTError" class="error-text text-danger" style="display:none;"></span>
+        </div>
+    </div>
+
+    <div class='row mb-3'>
+        <div class='col-md-12'>
+            <button id='INSERTAnime' type="submit">Insert Anime</button>
+        </div>
+    </div>
+    <div id="insertMessage" class="mt-3"></div>
+</form>
+
+    <div id="footer">
+        <div class="footer-mascot-container">
+            <img id="footerMascot"
+                src="https://tr.rbxcdn.com/180DAY-6b2ef62b407b79861ec2bb3cddf34d34/420/420/ShoulderAccessory/Webp/noFilter"
+                alt="Anime Mascot" class="footer-mascot">
+        </div>
+
+        <div id="footer">
+            <p class="textFooter">Where to Watch Animes</p>
+            <div class="container">
+                <div class="linkFooter">
+                    <a href="https://www.crunchyroll.com/">Crunchyroll</a>
+                    <a href="https://www.hulu.com/welcome">Hulu</a>
+                    <a
+                        href="https://www.amazon.com/gp/video/browse/ref=av_search_browse_redirect?queryPageType=browse&pageId=default&ie=UTF8&serviceToken=eyJ0eXBlIjoicXVlcnkiLCJuYXYiOnRydWUsInBpIjoiZGVmYXVsdCIsInNlYyI6ImNlbnRlciIsInN0eXBlIjoic2VhcmNoIiwicXJ5Ijoibm9kZT0yODU4Nzc4MDExJnNlYXJjaC1hbGlhcz1pbnN0YW50LXZpZGVvJmZpZWxkLWVudGl0eV90eXBlPTE0MDY5MTg1MDExJmZpZWxkLWlzX3ByaW1lX2JlbmVmaXQ9MjQ3MDk1NTAxMSZmaWVsZC10aGVtZV9icm93c2UtYmluPTI2NTAzNjQwMTEmYmJuPTI4NTg3NzgwMTEiLCJ0eHQiOiJBbmltZSIsIm9mZnNldCI6MCwibnBzaSI6MCwib3JlcSI6ImUxNDljNDA2LTc0YWQtNDM2ZS1hZDgzLWU1NWI1YWM3YmQ2MzoxNjAxNTA4NzMwMDAwIiwib3JlcWsiOiJMaTYrby9nc2gwaEdDY1RnYVRnS0x6bWJBenR6bmdvc29lSTA2emFoZmRJPSIsIm9yZXFrdiI6MX0%3D">Amazon
+                        Prime Video</a>
+                    <a href="https://www.netflix.com/">Netflix</a>
+                </div>
+            </div>
+        </div>
+
+        <button id="backToTopBtn" class="back-to-top" title="Go to top">↑ Top</button>
+
+        <script>
+
+            window.onscroll = function () {
+                const btn = document.getElementById("backToTopBtn");
+                if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                    btn.classList.add("show");
+                } else {
+                    btn.classList.remove("show");
+                }
+            };
+
+            document.getElementById("backToTopBtn").onclick = function () {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            const isEmpty = (obj) => Object.keys(obj).length === 0;
+
+            document.getElementById('animeSearchForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const getParameters = {};
+
+                const nameInput = document.getElementById('nameAnime').value.trim();
+                if (nameInput.length !== 0) getParameters.name = nameInput;
+
+                const genreInput = document.getElementById('genre').value.trim();
+                if (genreInput.length !== 0) getParameters.genre = genreInput;
+
+                if (document.getElementById('serviceScene').checked) getParameters.excludeService = 'true';
+                if (document.getElementById('dub').checked) getParameters.hasDub = 'true';
+
+                const limitInput = document.getElementById('limit').value;
+                if (limitInput) getParameters.limit = limitInput;
+
+                try {
+                    const queryString = !isEmpty(getParameters) ? '?' + new URLSearchParams(getParameters) : '';
+
+                    const response = await fetch("http://localhost/anime/" + queryString, { method: 'GET' });
+
+                    if (response.ok) {
+                        const json = await response.json();
+                        const resultsDiv = document.getElementById('results');
+
+                        resultsDiv.innerHTML = '';
+
+                        if (json.data && json.data.length > 0) {
+
+                            const tableResponsive = document.createElement('div');
+                            tableResponsive.className = 'table-responsive';
+
+                            const table = document.createElement('table');
+                            table.className = 'table table-striped';
+
+                            table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Genre</th>
+                            <th>Dub</th>
+                            <th>Service Scene</th>
+                            <th>Demographic</th>
+                            <th>Target Audience</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                `;
+
+                            const tbody = table.querySelector('tbody');
+
+                            json.data.forEach(row => {
+                                const tr = document.createElement('tr');
+
+                                const cellData = [
+                                    row.name,
+                                    row.genre,
+                                    row.has_dub ? 'Yes' : 'No',
+                                    row.has_service_scene ? 'Yes' : 'No',
+                                    row.name_demographic,
+                                    row.target_audience
+                                ];
+
+                                cellData.forEach(text => {
+                                    const td = document.createElement('td');
+                                    td.textContent = text;
+                                    tr.appendChild(td);
+                                });
+                                const editTd = document.createElement('td');
+                                editTd.innerHTML = `<a href="edit.html?id=${row.id}" class="btn btn-sm btn-outline-primary custom-edit-btn">Edit</a>`;
+                                tr.appendChild(editTd);
+
+                                tbody.appendChild(tr);
+
+                            });
+
+                            tableResponsive.appendChild(table);
+                            resultsDiv.appendChild(tableResponsive);
+
+                        } else {
+                            resultsDiv.textContent = 'No anime found matching your criteria (◞╭╮◟)';
+                        }
+                    } else {
+                        console.error('Server error:', response.status);
+                    }
+                } catch (error) {
+                    console.error('Fetch Error:', error);
+                }
+            });
+            
+            document.getElementById('animeINSERTForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const errorSpans = [
+        'nameINSERTError', 'genreINSERTError', 'serviceSceneINSERTError', 
+        'dubINSERTError', 'demographicINSERTError'
+    ];
+    errorSpans.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.textContent = '';
+            el.style.display = 'none';
+        }
+    });
+
+    const payload = {
+        name: document.getElementById('nameAnimeINSERT').value,
+        genre: document.getElementById('genreINSERT').value,
+        has_service_scene: document.getElementById('serviceSceneINSERT').checked,
+        has_dub: document.getElementById('dubINSERT').checked,
+        demographic_id: parseInt(document.getElementById('demographicINSERT').value)
+    };
+
+    const messageDiv = document.getElementById('insertMessage');
+    messageDiv.innerHTML = '';
+
+    try {
+        const response = await fetch("http://localhost/anime/", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            if (response.status === 400 && result.errors) {
+                messageDiv.innerHTML = '<div class="alert alert-danger">Please fix the highlighted errors below.</div>';
+
+                const errorMap = {
+                    name: 'nameINSERTError',
+                    genre: 'genreINSERTError',
+                    has_service_scene: 'serviceSceneINSERTError',
+                    has_dub: 'dubINSERTError',
+                    demographic: 'demographicINSERTError'
+                };
+
+                for (const [key, spanId] of Object.entries(errorMap)) {
+                    if (result.errors[key]) {
+                        const errorEl = document.getElementById(spanId);
+                        if (errorEl) {
+                            errorEl.textContent = result.errors[key];
+                            errorEl.style.display = 'block';
+                        }
+                    }
+                }
+            } else {
+                messageDiv.innerHTML = `<div class="alert alert-danger">Server error: ${result.message || response.status}</div>`;
+            }
+        } else {
+            messageDiv.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
+            document.getElementById('animeINSERTForm').reset();
+        }
+    } catch (error) {
+        console.error('Insert Fetch Error:', error);
+        messageDiv.innerHTML = `<div class="alert alert-danger">Network error occurred while trying to insert data.</div>`;
+    }
+});
+
+            // Click Luffy and see what happens 
+            const mascotImg = document.getElementById('footerMascot');
+
+            const mascotImages = [
+                'https://tr.rbxcdn.com/180DAY-6b2ef62b407b79861ec2bb3cddf34d34/420/420/ShoulderAccessory/Webp/noFilter',
+                'https://i.imgflip.com/8bcetk.png',
+                'https://tr.rbxcdn.com/180DAY-2a0a0f9b924cafd7c84552fe16c42736/420/420/ShoulderAccessory/Webp/noFilter',
+                'https://i.pinimg.com/originals/77/54/48/775448b6eb695bf6ffb427c909499a2a.png'
+            ];
+
+            const mascotAnimations = ['anim-spin', 'anim-bounce', 'anim-wobble'];
+
+            let currentMascotIndex = 0;
+            let currentAnimIndex = 0;
+
+            mascotImg.addEventListener('click', () => {
+                mascotImg.classList.remove(...mascotAnimations);
+
+                void mascotImg.offsetWidth;
+
+                currentAnimIndex = (currentAnimIndex + 1) % mascotAnimations.length;
+
+                mascotImg.classList.add(mascotAnimations[currentAnimIndex]);
+
+                setTimeout(() => {
+                    currentMascotIndex = (currentMascotIndex + 1) % mascotImages.length;
+                    mascotImg.src = mascotImages[currentMascotIndex];
+                }, 250);
+            });
+
+        </script>
+</body>
+
+</html>

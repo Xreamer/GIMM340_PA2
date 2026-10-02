@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Edit Anime</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Edit Anime</h1>
+        
+        <div id="successBanner" class="alert alert-success d-none"></div>
+        <div id="errorBanner" class="alert alert-danger d-none">Please fix the errors below.</div>
+
+        <form id="animeEditForm" class="mt-4">
+            <div class='row mb-3'>
+                <div class='col-md-2'><label>Name of Anime</label></div>
+                <div class='col-md-10'>
+                    <input id='nameEdit' class="form-control" type='text' />
+                    <span id="nameError" class="error-text"></span>
+                </div>
+            </div>
+
+            <div class='row mb-3'>
+                <div class='col-md-2'><label>Main Genre</label></div>
+                <div class='col-md-10'>
+                    <input id='genreEdit' class="form-control" type='text' />
+                    <span id="genreError" class="error-text"></span>
+                </div>
+            </div>
+
+            <div class='row mb-3'>
+                <div class='col-md-2'><label>Has Service scene</label></div>
+                <div class='col-md-10'>
+                    <input id='serviceSceneEdit' type='checkbox' />
+                    <span id="serviceSceneError" class="error-text d-block"></span>
+                </div>
+            </div>
+
+            <div class='row mb-3'>
+                <div class='col-md-2'><label>Has Dub</label></div>
+                <div class='col-md-10'>
+                    <input id='dubEdit' type='checkbox' />
+                    <span id="dubError" class="error-text d-block"></span>
+                </div>
+            </div>
+
+            <div class='row mb-3'>
+                <div class='col-md-2'><label>Demographic</label></div>
+                <div class='col-md-10'>
+                    <select id='demographicEdit'>
+                    <option value="-">-</option>
+                    <option value="1">G - For family or everyone</option>
+                    <option value="2">PG - For everyone maybe not for family</option>
+                    <option value="3">PG 13 - For adults or teens above 13</option>
+                    <option value="4">R - For adults or teens over 17</option>
+                    <option value="5">NC 17 - For adults or teens over 17</option>
+                    <option value="6">G - For family and everyone(excluding religious)</option>
+                    <option value="7">PG - Not for family and religious people</option>
+                    <option value="8">PG 13 - For adults and pre teens(excluding religious)</option>
+                    <option value="9">PG - For everyone and pre teens</option>
+                    <option value="10">PG - For everyone and pre teens (excluding religious)</option>
+                </select>
+                    <span id="demographicError" class="error-text"></span>
+                </div>
+            </div>
+
+            <div class='row mb-3'>
+                <div class='col-md-12'>
+                    <button type="submit" >Update Anime</button>
+                    <a href="index.html" class="custom-back-btn">Back to Search</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const animeId = urlParams.get('id');
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            if (!animeId) {
+                document.getElementById('errorBanner').textContent = "No Anime ID provided in URL.";
+                document.getElementById('errorBanner').classList.remove('d-none');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost/anime/${animeId}`);
+                if (response.ok) {
+                    const json = await response.json();
+                    const anime = json.data;
+
+                    document.getElementById('nameEdit').value = anime.name;
+                    document.getElementById('genreEdit').value = anime.genre;
+                    document.getElementById('serviceSceneEdit').checked = anime.has_service_scene;
+                    document.getElementById('dubEdit').checked = anime.has_dub;
+                    document.getElementById('demographicEdit').value = anime.demographic_id;
+                }
+            } catch (error) {
+                console.error('Fetch Error:', error);
+            }
+        });
+
+        document.getElementById('animeEditForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            document.getElementById('successBanner').classList.add('d-none');
+            document.getElementById('errorBanner').classList.add('d-none');
+            document.querySelectorAll('.error-text').forEach(el => el.style.display = 'none');
+
+            const payload = {
+                name: document.getElementById('nameEdit').value,
+                genre: document.getElementById('genreEdit').value,
+                has_service_scene: document.getElementById('serviceSceneEdit').checked,
+                has_dub: document.getElementById('dubEdit').checked,
+                demographic_id: parseInt(document.getElementById('demographicEdit').value)
+            };
+
+            try {
+                const response = await fetch(`http://localhost/anime/${animeId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    document.getElementById('errorBanner').classList.remove('d-none');
+
+                    if (response.status === 400 && result.errors) {
+                        if (result.errors.name) {
+                            const el = document.getElementById('nameError');
+                            el.textContent = result.errors.name;
+                            el.style.display = 'block';
+                        }
+                        if (result.errors.genre) {
+                            const el = document.getElementById('genreError');
+                            el.textContent = result.errors.genre;
+                            el.style.display = 'block';
+                        }
+                        if (result.errors.serviceScene) {
+                            const el = document.getElementById('serviceSceneError');
+                            el.textContent = result.errors.serviceScene;
+                            el.style.display = 'block';
+                        }
+                        if (result.errors.dub) {
+                            const el = document.getElementById('dubError');
+                            el.textContent = result.errors.dub;
+                            el.style.display = 'block';
+                        }
+                        if (result.errors.demographic) {
+                            const el = document.getElementById('demographicError');
+                            el.textContent = result.errors.demographic;
+                            el.style.display = 'block';
+                        }
+                    } else {
+                        document.getElementById('errorBanner').textContent = result.message || "Server error";
+                    }
+                } else {
+                    const successBanner = document.getElementById('successBanner');
+                    successBanner.textContent = result.message;
+                    successBanner.classList.remove('d-none');
+                }
+            } catch (error) {
+                console.error('Update Fetch Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
