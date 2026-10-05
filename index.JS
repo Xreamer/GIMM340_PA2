@@ -1,9 +1,8 @@
 const express = require('express');
 const multer = require('multer');
 const mysql = require('mysql2/promise');
-const process = require('node:process');
 
-process.loadEnvFile();
+require('dotenv').config();
 
 const app = express();
 app.use(express.static('public'));
