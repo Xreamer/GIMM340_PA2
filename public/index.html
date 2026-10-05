@@ -222,7 +222,7 @@
                 try {
                     const queryString = !isEmpty(getParameters) ? '?' + new URLSearchParams(getParameters) : '';
 
-                    const response = await fetch("http://localhost/anime/" + queryString, { method: 'GET' });
+                    const response = await fetch("/anime/" + queryString, { method: 'GET' });
 
                     if (response.ok) {
                         const json = await response.json();
@@ -321,7 +321,7 @@
     messageDiv.innerHTML = '';
 
     try {
-        const response = await fetch("http://localhost/anime/", {
+        const response = await fetch("/anime/", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
