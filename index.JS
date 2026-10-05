@@ -1,19 +1,22 @@
 const express = require('express');
 const multer = require('multer');
 const mysql = require('mysql2/promise');
+const process = require('node:process');
+
+process.loadEnvFile();
 
 const app = express();
 app.use(express.static('public'));
 app.use(express.json());
 
 const upload = multer();
-const port = 80;
+const port = process.env.SERVER_PORT;
 
 const pool = mysql.createPool({
-    host: "student-databases.cvode4s4cwrc.us-west-2.rds.amazonaws.com",
-    user: "STEPHANIECONTRER",
-    password: "rrMJ9n9QN5GDjR1avWtiatZPDYkaoz8rFE7",
-    database: 'STEPHANIECONTRER',
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
